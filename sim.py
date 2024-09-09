@@ -53,6 +53,8 @@ def sim_hand():
             with open("log.log",'a',encoding='UTF-8') as logger:
                 logger.write(f'{rules.get_hand_name(r)} | {hand.hand}\n')
 
+print("Starting simulation... (", GAMES, "games,", PLAYERS, "player(s) )")
+
 # Start timing
 ttime = time.time()
 
@@ -88,5 +90,5 @@ etime = time.time()
 print("Total run time:", round(etime - ttime,5), "seconds")
 
 # Plot the data
-plotgen.plot()
+plotgen.plot(GAMES,PLAYERS)
 sys_exit()

@@ -2,7 +2,7 @@
 import json
 import matplotlib.pyplot as plt
 
-def plot():
+def plot(games='Unknown',players='Unknown'):
     """Plots data"""
     # Data
     data = {}
@@ -13,9 +13,9 @@ def plot():
     plt.figure(figsize=(10, 6))
     plt.bar(data.keys(), data.values(), color='blue')
     plt.xticks(rotation=90)
-    plt.xlabel('Categories')
+    plt.xlabel('Hands')
     plt.ylabel('Values')
-    plt.title('Bar Chart of Provided Data')
+    plt.title(games, "games with",players,"player(s)")
     plt.tight_layout()
 
     # Show the plot
