@@ -17,7 +17,13 @@ LOG = False
 S = 0
 R = 1
 
-totals = {}
+totals = {
+    'meta': {
+        'games_played': 0,
+        'players': 0
+    },
+    'totals': {}
+}
 
 def sim_hand():
     """Simulates the hands"""
@@ -45,7 +51,7 @@ def sim_hand():
 
         # Add the total to the return dict
         try:
-            totals[rules.get_hand_name(r)] += 1
+            totals['totals'][rules.get_hand_name(r)] += 1
         except Exception:
             pass
         # If there is logging enabled, log the hand and what it returned
@@ -71,10 +77,14 @@ if LOG:
 
 # Initialize the total dict
 for i in rules.hand_names:
-    totals[i] = 0
+    totals['totals'][i] = 0
 
 # Start the time for the simulation and simulate all the hands
 start = time.time()
+
+totals['meta']['games_played'] = GAMES
+totals['meta']['players'] = PLAYERS
+
 for l in range(GAMES):
     sim_hand()
 
