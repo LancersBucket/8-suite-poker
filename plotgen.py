@@ -15,7 +15,7 @@ def plot(games='Unknown',players='Unknown'):
     plt.xticks(rotation=90)
     plt.xlabel('Hands')
     plt.ylabel('Values')
-    plt.title(f'{games} games with, {players} player(s)')
+    plt.title(f'{games} games with {players} player(s)')
     plt.tight_layout()
 
     # Show the plot
