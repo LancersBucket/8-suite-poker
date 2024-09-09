@@ -11,11 +11,11 @@ def plot(games='Unknown',players='Unknown'):
 
     # Create bar chart
     plt.figure(figsize=(10, 6))
-    plt.bar(data.keys(), data.values(), color='blue')
+    plt.bar(data['totals'].keys(), data['totals'].values(), color='blue')
     plt.xticks(rotation=90)
     plt.xlabel('Hands')
     plt.ylabel('Values')
-    plt.title(games, "games with",players,"player(s)")
+    plt.title(f'{games} games with, {players} player(s)')
     plt.tight_layout()
 
     # Show the plot

@@ -339,12 +339,12 @@ class HandCalculator:
         # Checks for how many unique suits there are by removing duplacates and getting the len
         sarr = set(sarr)
         match (len(sarr)):
-            case 5:
-                return "Clog"
-            case 6:
-                return "Clog (6)"
-            case 7:
-                return "7-Card Clog"
+            #case 5:
+            #    return "Clog"
+            #case 6:
+            #    return "Clog (6)"
+            #case 7:
+            #    return "7-Card Clog"
             case 8:
                 return "8-Card Clog"
         return "Invalid"
@@ -434,8 +434,8 @@ class HandCalculator:
         if -1 < hand < highest_hand:
             highest_hand = hand
 
-        hand = rules.get_hand_pos(self.straight_clog())
-        if -1 < hand < highest_hand:
-            highest_hand = hand
+        #hand = rules.get_hand_pos(self.straight_clog())
+        #if -1 < hand < highest_hand:
+        #    highest_hand = hand
 
         return highest_hand
