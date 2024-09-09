@@ -266,28 +266,26 @@ def print_human() -> None:
 #print(test.straight())
 #sys.exit()
 
-
-#hand = sim_class.HandCalculator(Straight_Flush_7)
-#print(rules.get_hand_name(hand.straight_flush()))
-#sys.exit()
-
 def run_tests():
     """Run test suite"""
     i = 0
     pss = 0
     for data in group:
+        # Loops over each test set can calculates the hand
         hand = HandCalculator.HandCalculator(data)
-        #print(i,hand)
+        # If the hand is equal to what the hand should be, it passes
         if rules.get_hand_name(i) == rules.get_hand_name(hand.calc_hand()):
             stat = "\033[92m(Pass)\033[0m"
             pss += 1
         else:
             stat = "\033[91m(Fail)\033[0m"
 
+            # Print only the faild tests for simplicity
             print(f'{stat} Should Be: {rules.get_hand_name(i)}... is {rules.get_hand_name(hand.calc_hand())}')
         i += 1
     print(f'{pss}/{i} tests passed ({i-pss} failed)')
 
+    # If all the tests passed, celebrate
     if pss == i:
         print("All tests passed! :D")
         return True
