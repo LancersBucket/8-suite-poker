@@ -20,7 +20,8 @@ R = 1
 totals = {
     'meta': {
         'games_played': 0,
-        'players': 0
+        'players': 0,
+        'completed': 0
     },
     'totals': {}
 }
@@ -88,12 +89,13 @@ totals['meta']['players'] = PLAYERS
 for l in range(GAMES):
     sim_hand()
 
-with open('data.json', 'w', encoding='utf-8') as f:
-    json.dump(totals, f, ensure_ascii=False, indent=4)
-
 # End the sim time and retrun status
 end = time.time()
 print("Completed", GAMES, "games with", PLAYERS, "player(s) in", round(end - start,5), "seconds")
+totals['meta']['completed'] = end
+
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(totals, f, ensure_ascii=False, indent=4)
 
 # End the total time and return that information
 etime = time.time()
