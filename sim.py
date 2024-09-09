@@ -13,6 +13,7 @@ PLAYERS = 1
 GAMES = 10000
 TESTS = False
 LOG = False
+CHART = True
 
 S = 0
 R = 1
@@ -102,5 +103,7 @@ etime = time.time()
 print("Total run time:", round(etime - ttime,5), "seconds")
 
 # Plot the data
-plotgen.plot(GAMES,PLAYERS)
+if CHART:
+    plotgen.plot(GAMES,PLAYERS)
+
 sys_exit()
