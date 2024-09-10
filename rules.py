@@ -5,25 +5,7 @@ def gen_cards() -> list:
     # Loops through each suit and rank to generate an array of all 112 cards
     for i in range(8):
         for j in range(14):
-            suit = ""
-            rank = -1
-            match i:
-                case 0:
-                    suit = "Spade"
-                case 1:
-                    suit = "Heart"
-                case 2:
-                    suit = "Diamond"
-                case 3:
-                    suit = "Club"
-                case 4:
-                    suit = "Star"
-                case 5:
-                    suit = "Cup"
-                case 6:
-                    suit = "Shield"
-                case 7:
-                    suit = "Moon"
+            suit = suits[i]
             rank = j
             arr.append((suit,rank))
     return arr
