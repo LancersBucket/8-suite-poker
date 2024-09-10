@@ -9,6 +9,9 @@ def plot(games='Unknown',players='Unknown'):
     with open('data.json',encoding="UTF-8") as f:
         data = json.load(f)
 
+    games = data['meta']['games_played']
+    players = data['meta']['players']
+
     # Create bar chart
     plt.figure(figsize=(10, 6))
     plt.bar(data['totals'].keys(), data['totals'].values(), color='blue')
