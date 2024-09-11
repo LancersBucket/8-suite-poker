@@ -42,14 +42,8 @@ class HandCalculator:
 
     def gen_stats(self, hnd):
         """Generates stats"""
-        sarr = []
-        rarr = []
-
-        # Loop through the hand and get an array of only suits and ranks independently
-        for i in range(len(hnd)):
-            sarr.append(hnd[i][S])
-        for i in range(len(hnd)):
-            rarr.append(hnd[i][R])
+        sarr = [card[S] for card in hnd]
+        rarr = [card[R] for card in hnd]
 
         best = 0
         best_suit = ''
@@ -76,28 +70,57 @@ class HandCalculator:
         r_sort = self.hand_r_sort.copy()
         s_sort = self.hand_s_sort.copy()
 
-        # Straight Search
-        max_count = 0
-        count = 0
         s_flush_count = 0
         max_flush_count = 0
         start_rank = 0
+        # Checks for straight flushes, see straight section for more detailed description
+        # Loops over only the suits that could be a flush
+        for suit in self.stats['meta']['potential_flush']:
+            for i in range(len(s_sort)):
+                if start_rank > 1:
+                    for j in range(len(s_sort)):
+                        if s_sort[j][R] == 1:
+                            s_sort[j] = tuple((s_sort[j][S], s_sort[j][R]))
+                # If the current card doesn't match the current suit reset the count
+                if s_sort[i][S] != suit:
+                    s_flush_count = 0
+                    continue
+                if s_flush_count == 0:
+                    start_rank = s_sort[i][R]
+                    s_flush_count += 1
+                    continue
+                if s_sort[i][R] == start_rank+s_flush_count:
+                    s_flush_count += 1
+                    max_flush_count = max(s_flush_count, max_flush_count)
+                    continue
+                s_flush_count = 0
 
-        # Loop through each card
+        max_flush_count = min(max_flush_count,8)
+
+        # Return straight flushes first, and if none, return regular straights
+        match (max_flush_count):
+            case 5:
+                return "Straight Flush"
+            case 6:
+                return "Straight Flush (6)"
+            case 7:
+                return "Straight Flush (7)"
+            case 8:
+                return "Str8 Flush"
+
+        # Similar algorithm but checks for straights only
+        max_count = 0
+        count = 0
+        start_rank = 0
         for i in range(len(r_sort)):
             # Since Aces are considered 1 in the code, this has them count as a 14 value too.
             # If the start_rank that it is considering in the straight is greater than 1,
             #   set all 1s to be equal to 14.
-            # This has a weird side effect that Aces can count twice in straights as 1 and 14,
-            #   however, this isn't practially a problem as the largest straight you can make is
-            #   from 1-9 or 6-14 so following the hand ruleset it isn't an issue
-            #   (additonally it caps the max straight length to 8 anyway). 
             if start_rank > 1:
                 for j in range(len(r_sort)):
                     if r_sort[j][R] == 1:
-                        r_sort[j] = list(r_sort[j])
-                        r_sort[j][R] = 14
-                        r_sort[j] = tuple(r_sort[j])
+                        r_sort[j] = tuple((r_sort[j][S], r_sort[j][R]))
+
             # If the count is 0, set the start rank to the current card and add 1 to the count
             if count == 0:
                 start_rank = r_sort[i][R]
@@ -117,45 +140,9 @@ class HandCalculator:
             start_rank = r_sort[i][R]
             count = 1
 
-        # Similar algorithm but checks for straight flushes
-        start_rank = 0
-        # Loops over only the suits that could be a flush
-        for suit in self.stats['meta']['potential_flush']:
-            for i in range(len(s_sort)):
-                if start_rank > 1:
-                    for j in range(len(s_sort)):
-                        if s_sort[j][R] == 1:
-                            s_sort[j] = list(s_sort[j])
-                            s_sort[j][R] = 14
-                            s_sort[j] = tuple(s_sort[j])
-                # If the current card doesn't match the current suit reset the count
-                if s_sort[i][S] != suit:
-                    s_flush_count = 0
-                    continue
-                if s_flush_count == 0:
-                    start_rank = s_sort[i][R]
-                    s_flush_count += 1
-                    continue
-                if s_sort[i][R] == start_rank+s_flush_count:
-                    s_flush_count += 1
-                    max_flush_count = max(s_flush_count, max_flush_count)
-                    continue
-                s_flush_count = 0
-
         # Get the counts from 0-8
         max_count = min(max_count,8)
-        max_flush_count = min(max_flush_count,8)
 
-        # Return straight flushes first, and if none, return regular straights
-        match (max_flush_count):
-            case 5:
-                return "Straight Flush"
-            case 6:
-                return "Straight Flush (6)"
-            case 7:
-                return "Straight Flush (7)"
-            case 8:
-                return "Str8 Flush"
         match (max_count):
             case 5:
                 return "Straight"
@@ -170,12 +157,11 @@ class HandCalculator:
 
     def flush(self) -> int:
         """Calculate if there is a flush from 5-8"""
-        count = 0
         best_count = 0
+
         # Loop over each suit within the potential flushes and return the highest count
         for suit in self.stats['meta']['potential_flush']:
-            count = self.stats['stat']['suit_freq'][suit]
-            best_count = max(count,best_count)
+            best_count = max(self.stats['stat']['suit_freq'][suit],best_count)
 
         best_count = min(best_count, 8)
 
@@ -193,10 +179,7 @@ class HandCalculator:
     def kinds(self) -> int:
         """Calculates 3-8 of a kinds, and pairs"""
         full = self.hand_r_sort
-        rarr = []
-
-        for i in range(len(full)):
-            rarr.append(full[i][R])
+        rarr = [card[R] for card in full]
 
         # Loops over each rank and gets the highest count within the cards
         best_count = rarr.count(0)
@@ -225,10 +208,7 @@ class HandCalculator:
     def pairs(self) -> int:
         """Checks for types of pairs"""
         full = self.hand_r_sort
-        rarr = []
-
-        for i in range(len(full)):
-            rarr.append(full[i][R])
+        rarr = [card[R] for card in full]
 
         # Counts the total number of paris (cards that have two or more of the same rank)
         total = 0
@@ -252,10 +232,7 @@ class HandCalculator:
     def two_triplets(self) -> int:
         """Checks for two triplets"""
         full = self.hand_r_sort
-        rarr = []
-
-        for i in range(len(full)):
-            rarr.append(full[i][R])
+        rarr = [card[R] for card in full]
 
         total = 0
         # Similar to the pairs except it just counts ranks that have 3 or more
@@ -263,18 +240,15 @@ class HandCalculator:
             count = rarr.count(i)
             if count >= 3:
                 total += 1
+            if total >= 2:
+                return "Two Triplets"
 
-        if total >= 2:
-            return "Two Triplets"
         return "Invalid"
 
     def partners(self) -> int:
         """Check for the partners"""
         full = self.hand_r_sort
-        rarr = []
-
-        for i in range(len(full)):
-            rarr.append(full[i][R])
+        rarr = [card[R] for card in full]
 
         # Similar to two_triplets but for 4 of a kinds
         total = 0
@@ -328,13 +302,8 @@ class HandCalculator:
     def clog(self) -> int:
         """Searches for clogs"""
         full = self.hand_s_sort
-        sarr = []
+        sarr = set(card[S] for card in full)
 
-        for i in range(len(full)):
-            sarr.append(full[i][S])
-
-        # Checks for how many unique suits there are by removing duplacates and getting the len
-        sarr = set(sarr)
         match (len(sarr)):
             case 5:
                 return "Clog"
