@@ -10,6 +10,9 @@ def gen_cards() -> list:
             arr.append((suit,rank))
     return arr
 
+# Array of suit names
+suits = ["Spade", "Heart", "Diamond", "Club", "Star", "Cup", "Shield", "Moon"]
+
 # List of hand names in order of best to worst (Str8 Flush is the highests)
 hand_names = [
     "Str8 Flush",
@@ -71,6 +74,3 @@ def get_hand_pos(hand_name: str) -> int:
         return hand_names.index(hand_name)
     except Exception:
         return len(hand_names)-1
-
-# Array of suits
-suits = ["Spade", "Heart", "Diamond", "Club", "Star", "Cup", "Shield", "Moon"]

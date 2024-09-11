@@ -1,12 +1,8 @@
 """Test sets"""
-import HandCalculator
+from hand_calulator import HandCalculator
 import rules
 
-t1 = [('Star', 1), ('Club', 2), ('Shield', 3), ('Club', 4), ('Club', 5), ('Cup', 6),
-      ('Diamond', 8), ('Shield', 10), ('Heart', 10), ('Shield', 13), ('Spade', 13)]
-
-# Test Datasets
-
+# Test Cases
 Str8_Flush = [
     ('Spade', 1), ('Spade', 2), ('Spade', 3), ('Spade', 4),
     ('Spade', 5), ('Spade', 6), ('Spade', 7), ('Spade', 8),
@@ -259,20 +255,13 @@ def print_human() -> None:
         print("\n")
         k += 1
 
-#print_human()
-#sys.exit()
-
-#test = sim_class.HandCalculator(Straight_Flush)
-#print(test.straight())
-#sys.exit()
-
 def run_tests():
     """Run test suite"""
     i = 0
     pss = 0
     for data in group:
         # Loops over each test set can calculates the hand
-        hand = HandCalculator.HandCalculator(data)
+        hand = HandCalculator(data)
         # If the hand is equal to what the hand should be, it passes
         if rules.get_hand_name(i) == rules.get_hand_name(hand.calc_hand()):
             stat = "\033[92m(Pass)\033[0m"

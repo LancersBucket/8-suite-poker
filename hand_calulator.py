@@ -6,9 +6,6 @@ R = 1
 
 class HandCalculator:
     """Calculates hands"""
-    #hand = []
-    #hand_r_sort = []
-    #hand_s_sort = []
     def __init__(self, hnd):
         # Initalize HandCalculator, setting the hand array, and hand array sorted by rank and suit
         self.hand = hnd

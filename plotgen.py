@@ -2,7 +2,7 @@
 import json
 import matplotlib.pyplot as plt
 
-def plot(games='Unknown',players='Unknown'):
+def plot():
     """Plots data"""
     # Data
     data = {}
